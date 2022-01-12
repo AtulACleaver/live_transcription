@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Deepgram Workshop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+      body {
+        background: #fafafa;
+        color: #141e29;
+        font-family: 'Be Vietnam Pro', sans-serif;
+      }
+      p {
+        font-size: 1.25em;
+        line-height: 1.5;
+      }
+      h1{ 
+        font-size: 3rem;
+        padding: 0.5rem 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🗣 Live Speech Transition</h1>
+    <p></p>
+    <script> 
+      const DG_ENDPOINT = 'wss://api.deepgram.com/v1/listen'
+
+      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+        if (!MediaRecorder.isTypeSupported('audio/webm')) return alert('Browser not supported')
+        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
+
+        const socket = new WebSocket(DG_ENDPOINT, ['token', 'Change it to your API'])
+
+        socket.onopen = () => {
+          mediaRecorder.addEventListener('dataavailable', async (event) => {
+            if (event.data.size > 0 && socket.readyState == 1) {
+              socket.send(event.data)
+            }
+          })
+          mediaRecorder.start(250)
+        }
+
+        socket.onmessage = message => {
+          const data = JSON.parse(message.data)
+          console.log(data)
+
+          const { channel, is_final } = data
+          const transcript = channel.alternatives[0].transcript
+
+          if (transcript && is_final) {
+            document.querySelector('p').textContent += ' ' + transcript
+          }
+        }
+      })
+    </script>
+  </body>
+</html>
