@@ -7,3 +7,6 @@ Transcript what you speak with this python tool.
 <img src="https://i.ibb.co/23n7Wbf/Screenshot-2022-01-12-at-9-31-13-AM.png" alt="" border="0" width="100%">
 * Now just open the `index.html` in your browser.
 * Give it mic permissions and your are just ready to rock.
+
+## 📄 Preview
+<img src="https://i.ibb.co/JmWz9dn/Screenshot-2022-01-12-at-10-40-36-AM.png" alt="Screenshot-2022-01-12-at-10-40-36-AM" border="0">
